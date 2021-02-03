@@ -1,11 +1,26 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CannonScript : MonoBehaviour
 {
+    // ------------------------- UI -------------------------
+    [SerializeField]
+    private Text ammoText;
+
+    [SerializeField]
+    private Text timerText;
+
+
+    [SerializeField]
+    private Text cannonStatus;
+
+    // ------------------------------------------------------
+
+
     // ------------------------- Camera info -------------------------
-    
+
     private Vector3 cameraPosition = Vector3.zero;
 
     [Header("Camera Info")]
@@ -30,6 +45,16 @@ public class CannonScript : MonoBehaviour
     // ------------------------- Cannon info -------------------------
 
     [Header("Cannon Info")]
+
+    [SerializeField]
+    private float delay;
+
+    [SerializeField]
+    private int ammo;
+
+    [SerializeField]
+    private float timeSeconds;
+
     [SerializeField]
     private float m_cannonBallSpeed;
 
@@ -50,8 +75,13 @@ public class CannonScript : MonoBehaviour
     [SerializeField]
     private Vector2 rotationSpeed = Vector2.zero;
 
+    private float timesincefire = 0f;
+
     void Start()
     {
+        // The player starts with the cannon already reloaded
+        timesincefire = delay;
+
         // Setup the camera to where it shold be with the yaw and pitch we specified in the inspector
         CalculateSphericalCoordinates();
         Camera.main.transform.position = cameraPosition;
@@ -63,8 +93,19 @@ public class CannonScript : MonoBehaviour
         HandleCamera();
         HandleFiring();
         HandleUserInput();
+        HandleUI();
     }
-
+    private void HandleUI()
+    {
+        timeSeconds -= Time.deltaTime;
+        if (timeSeconds <= 0f)
+        {
+            timeSeconds = 0f;
+            // Load lose scene
+        }
+        ammoText.text = "x " + ammo.ToString("F0");
+        timerText.text = "0:" + timeSeconds.ToString("00");
+    }
     private void CalculateSphericalCoordinates()
     {
 
@@ -116,6 +157,8 @@ public class CannonScript : MonoBehaviour
 
     private void HandleUserInput()
     {
+
+
         // Better then doing key inputs directly and hard coding the rotation speed
         // This way, the axis mapping will return a value that interpolates to 1 as you press it, making it look more natural rather then strafing rotation
         float horizontalAxis = Input.GetAxis("Horizontal");
@@ -139,8 +182,29 @@ public class CannonScript : MonoBehaviour
     }
     private void HandleFiring()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        timesincefire += Time.deltaTime;
+
+        if (timesincefire <= delay && ammo > 0)
         {
+            cannonStatus.text = "--> Reloading...";
+            cannonStatus.color = Color.yellow;
+        }
+        else if (timesincefire >= delay && ammo > 0)
+        {
+            cannonStatus.text = "--> Ready!";
+            cannonStatus.color = Color.green;
+        }
+        else
+        {
+            cannonStatus.text = "--> No ammo!";
+            cannonStatus.color = Color.red;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space) && timesincefire >= delay && ammo > 0)
+        {
+            timesincefire = 0f;
+            ammo--;
+
             // Local point of spawn location
             Vector3 direction = m_spawnPoint.position - m_barrel.transform.position;
 
