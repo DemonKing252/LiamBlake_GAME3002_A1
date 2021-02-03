@@ -76,9 +76,11 @@ public class CannonScript : MonoBehaviour
     private Vector2 rotationSpeed = Vector2.zero;
 
     private float timesincefire = 0f;
-
+    
     void Start()
     {
+        Application.targetFrameRate = 60;
+
         // The player starts with the cannon already reloaded
         timesincefire = delay;
 
@@ -104,7 +106,7 @@ public class CannonScript : MonoBehaviour
             // Load lose scene
         }
         ammoText.text = "x " + ammo.ToString("F0");
-        timerText.text = "0:" + timeSeconds.ToString("00");
+        timerText.text = "Time: 0:" + timeSeconds.ToString("00");
     }
     private void CalculateSphericalCoordinates()
     {
