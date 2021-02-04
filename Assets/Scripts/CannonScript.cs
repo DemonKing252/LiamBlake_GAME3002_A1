@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class CannonScript : MonoBehaviour
@@ -79,6 +80,12 @@ public class CannonScript : MonoBehaviour
     
     void Start()
     {
+        if (Utilities.ScenesChanged == 0)
+        {
+            SceneManager.LoadScene("MainMenu");
+        }
+        
+        Utilities.ScenesChanged++;
         Application.targetFrameRate = 60;
 
         // The player starts with the cannon already reloaded
@@ -104,6 +111,8 @@ public class CannonScript : MonoBehaviour
         {
             timeSeconds = 0f;
             // Load lose scene
+            SceneManager.LoadScene("LoseScene");
+
         }
         ammoText.text = "x " + ammo.ToString("F0");
         timerText.text = "Time: 0:" + timeSeconds.ToString("00");
