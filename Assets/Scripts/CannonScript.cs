@@ -7,15 +7,24 @@ using UnityEngine.UI;
 public class CannonScript : MonoBehaviour
 {
     // ------------------------- UI -------------------------
+
     [SerializeField]
     private Text ammoText;
 
     [SerializeField]
     private Text timerText;
 
-
     [SerializeField]
     private Text cannonStatus;
+
+    [SerializeField]
+    public Text CrateText;
+
+    [SerializeField]
+    public Text ScoreText;
+
+    [SerializeField]
+    public Text MassText;
 
     // ------------------------------------------------------
 
@@ -54,6 +63,12 @@ public class CannonScript : MonoBehaviour
     private int ammo;
 
     [SerializeField]
+    public int NumCrates = 0;
+
+    [SerializeField]
+    public int Mass = 0;
+
+    [SerializeField]
     private float timeSeconds;
 
     [SerializeField]
@@ -70,6 +85,7 @@ public class CannonScript : MonoBehaviour
 
     [SerializeField]
     private GameObject m_barrel = null;
+
     // --------------------------------------------------------------
 
     // Yaw (x), Pitch (y)
@@ -80,6 +96,9 @@ public class CannonScript : MonoBehaviour
     
     void Start()
     {
+        MassText.text = "Crate Mass: " + Mass.ToString() + " kg";
+
+        CrateText.text = "x " + NumCrates.ToString();
         if (Utilities.ScenesChanged == 0)
         {
             SceneManager.LoadScene("MainMenu");
@@ -184,10 +203,21 @@ public class CannonScript : MonoBehaviour
         }
         if (verticalAxis != 0.0f)
         {
-            Vector3 rotationBy = new Vector3(verticalAxis * rotationSpeed.y * Time.deltaTime, 0f);
-
+            Vector3 rotationBy = new Vector3(verticalAxis * rotationSpeed.y * Time.deltaTime, 0f, 0f);
 
             m_barrel.transform.eulerAngles -= rotationBy;
+            float rotX = m_barrel.transform.eulerAngles.x;
+
+            if (rotX <= 315f && rotX >= 315f - rotationSpeed.y)
+            {
+                rotX = 315f;
+            }
+            else if (rotX >= 10f && rotX <= 10f + rotationSpeed.y)
+            {
+                rotX = 10f;
+            }
+            m_barrel.transform.eulerAngles = new Vector3(rotX, m_barrel.transform.eulerAngles.y, m_barrel.transform.eulerAngles.z);
+            
         }
         
     }
@@ -213,8 +243,10 @@ public class CannonScript : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Space) && timesincefire >= delay && ammo > 0)
         {
+            Utilities.Multiplier = 1;
             timesincefire = 0f;
             ammo--;
+            //GetComponent<ParticleSystem>().Play();
 
             // Local point of spawn location
             Vector3 direction = m_spawnPoint.position - m_barrel.transform.position;
