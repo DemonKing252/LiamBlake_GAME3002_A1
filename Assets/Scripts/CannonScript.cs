@@ -163,10 +163,10 @@ public class CannonScript : MonoBehaviour
             // Note: important to use delta time to ensure the speed remains the same regardless of framerate!
 
             if (mouseX != 0f)
-                yaw += mouseX * mouseSensitivity * Time.deltaTime;
+                yaw -= mouseX * mouseSensitivity * Time.deltaTime;
 
             if (mouseY != 0f)
-                pitch += mouseY * mouseSensitivity * Time.deltaTime;
+                pitch -= mouseY * mouseSensitivity * Time.deltaTime;
 
         }
         if (Input.GetKey(KeyCode.Mouse1))

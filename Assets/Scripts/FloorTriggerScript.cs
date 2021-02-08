@@ -12,14 +12,16 @@ public class FloorTriggerScript : MonoBehaviour
     private GameObject ScoreAddedText = null;
 
     [SerializeField]
-    private Canvas ParentTransform = null;
+    private GameObject ParentTransform = null;
 
     public void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "Crate")
         {
-            GameObject scoreAdded = Instantiate(ScoreAddedText, new Vector3(-10.76f, 9.57f, 0f), Quaternion.identity);
-            scoreAdded.GetComponent<TextMesh>().text = "+" + (25 * Utilities.Multiplier).ToString();
+            GameObject scoreAdded = Instantiate(ScoreAddedText, new Vector3(-10.76f, 9.57f, 0f), Quaternion.identity, ParentTransform.transform);
+            scoreAdded.GetComponent<Text>().text = "+" + (25 * Utilities.Multiplier).ToString();
+            scoreAdded.transform.position = new Vector3(95f, 340f, 0f);
+            //scoreAdded.GetComponent<Transform>().SetParent(ParentTransform.transform, false);
 
             Utilities.Score += 25 * Utilities.Multiplier;
             Utilities.Multiplier++;
