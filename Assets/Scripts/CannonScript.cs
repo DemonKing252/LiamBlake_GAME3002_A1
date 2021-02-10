@@ -98,8 +98,9 @@ public class CannonScript : MonoBehaviour
     void Start()
     {
         MassText.text = "Crate Mass: " + Mass.ToString() + " kg";
-
+        ScoreText.text = "Score: " + Utilities.Score.ToString();
         CrateText.text = "x " + NumCrates.ToString();
+
         if (Utilities.ScenesChanged == 0)
         {
             SceneManager.LoadScene("MainMenu");
