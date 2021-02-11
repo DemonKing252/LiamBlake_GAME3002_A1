@@ -5,7 +5,12 @@ using UnityEngine.SceneManagement;
 
 public class MainMenuScript : MonoBehaviour
 {
-    
+    private void Start()
+    {
+        Utilities.CurrentLevel = 1;
+        Utilities.Score = 0;
+        Utilities.Multiplier = 1;
+    }
 
     public void LoadLevel1()
     {

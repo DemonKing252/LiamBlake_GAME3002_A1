@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class FloorTriggerScript : MonoBehaviour
 {
@@ -38,9 +39,17 @@ public class FloorTriggerScript : MonoBehaviour
             CannonRef.NumCrates--;
             if (CannonRef.NumCrates <= 0)
             {
-                // pause
-                Time.timeScale = 0f;
-                overlay.gameObject.SetActive(true);
+                if (Utilities.CurrentLevel == 3)
+                {
+                    SceneManager.LoadScene("WinScene");
+                }
+                else
+                {
+                    // pause
+                    Time.timeScale = 0f;
+                    overlay.gameObject.SetActive(true);
+
+                }
             }
             
             CannonRef.CrateText.text = "x " + CannonRef.NumCrates.ToString();
