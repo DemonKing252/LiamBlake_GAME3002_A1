@@ -101,6 +101,7 @@ public class CannonScript : MonoBehaviour
         ScoreText.text = "Score: " + Utilities.Score.ToString();
         CrateText.text = "x " + NumCrates.ToString();
 
+        // Only an issue from the editor side, not the build side (.exe)
         if (Utilities.ScenesChanged == 0)
         {
             SceneManager.LoadScene("MainMenu");
@@ -157,7 +158,7 @@ public class CannonScript : MonoBehaviour
         // The mouse x and y axis mapping return a value between -1 and 1. We can use that to rotate the camera's pitch and yaw with this:
         if (Input.GetKey(KeyCode.Mouse0))
         {
-
+            // Add yaw and pitch depending on delta mouse x/y 
             float mouseX = Input.GetAxis("Mouse X");
             float mouseY = Input.GetAxis("Mouse Y");
 
@@ -172,6 +173,7 @@ public class CannonScript : MonoBehaviour
         }
         if (Input.GetKey(KeyCode.Mouse1))
         {
+            // add/subtract radius in the spherical conversion using delta mouse-y
             float mouseY = Input.GetAxis("Mouse Y");
 
             radius -= mouseY * mouseRadiusSensitivity * Time.deltaTime;
@@ -210,6 +212,7 @@ public class CannonScript : MonoBehaviour
             m_barrel.transform.eulerAngles -= rotationBy;
             float rotX = m_barrel.transform.eulerAngles.x;
 
+            // clamp between (-10 and +45 degrees pitch)
             if (rotX <= 315f && rotX >= 315f - rotationSpeed.y)
             {
                 rotX = 315f;
@@ -253,14 +256,16 @@ public class CannonScript : MonoBehaviour
             // Local point of spawn location
             Vector3 direction = m_spawnPoint.position - m_barrel.transform.position;
 
-            // Bring the length of the vector back to 1 (for accurate speed results):
+            // Bring the length of the vector back to 1 -> [n = n / |n|]
             direction.Normalize();
 
             // Now scale the vector by the speed we want:
             direction *= m_cannonBallSpeed;
 
-            // Spawn ball and impulse!
+            // Spawn ball
             GameObject cannonBall = Instantiate(m_cannonBallPrefab, m_spawnPoint.position, Quaternion.identity);
+
+            // Add impulse
             cannonBall.GetComponent<Rigidbody>().AddForce(direction, ForceMode.Impulse);
 
 
